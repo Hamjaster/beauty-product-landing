@@ -44,7 +44,6 @@ function App() {
           start: 'top 40%',
           end: 'top 10%',
           scrub: 1.5,
-          markers:true ,
         },
       });
     
