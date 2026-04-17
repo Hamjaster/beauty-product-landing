@@ -40,10 +40,11 @@ function App() {
       {
         clipPath: 'inset(0 0% 0 0)',
         scrollTrigger: {
-          trigger: ecosystemSectionRef.current,
-          start: 'top bottom',
+          trigger: aboutSectionRef.current,
+          start: 'top 40%',
           end: 'top 10%',
           scrub: 1.5,
+          markers:true ,
         },
       });
     
@@ -226,7 +227,7 @@ function App() {
           </div>
 
       {/* ===== ABOUT SECTION ===== */}
-      <section  aria-label="About" className="relative h-screen bg-[#FDF8F0]">
+      <section ref={aboutSectionRef} aria-label="About" className="relative h-screen bg-[#FDF8F0]">
         <div className="pt-[80px]">
           <div className="h-[18vh]" />
 
