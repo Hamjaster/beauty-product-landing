@@ -146,8 +146,9 @@ export default function HorizontalScrollSection() {
   return (
     <section
       ref={sectionRef}
+      id="philosophy"
       aria-label="Our Philosophy"
-      className="relative z-30 overflow-clip bg-[#F5EDE0]"
+      className="relative z-30 scroll-mt-24 overflow-clip bg-[#F5EDE0]"
     >
       <div
         className="absolute inset-0 opacity-40"

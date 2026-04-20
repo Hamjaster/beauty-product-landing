@@ -1,18 +1,27 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { MessageCircle, Leaf, Users, Sparkles, Heart } from 'lucide-react';
+import { Leaf, Menu, MoonStar, Users, Sparkles, Heart, X } from 'lucide-react';
 import AnimatedGradientBackground from './components/AnimatedGradientBackground';
 import EcosystemCard from './components/EcosystemCard';
 import HorizontalScrollSection from './components/HorizontalScrollSection';
-import ApproachSection from './components/ApproachSection';
 import { DetailsSection, SiteFooter } from './components';
 import product from './assets/bottle.svg';
 gsap.registerPlugin(ScrollTrigger);
 
+const navLinks = [
+  { label: 'Home', href: '#home' },
+  { label: 'About', href: '#about' },
+  { label: 'Values', href: '#values' },
+  { label: 'Philosophy', href: '#philosophy' },
+  { label: 'Impact', href: '#impact' },
+  { label: 'Contact', href: '#contact' },
+] as const;
+
 function App() {
   const imageRef = useRef<HTMLDivElement>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const aboutSectionRef = useRef<HTMLDivElement>(null);
   const aboutTextRef = useRef<HTMLDivElement>(null);
@@ -107,9 +116,10 @@ function App() {
       <AnimatedGradientBackground />
 
       {/* ===== GLOBAL FIXED HEADER ===== */}
-      <header className="fixed top-0 left-0 right-0 z-50 mx-auto flex items-center justify-between w-[min(1380px,calc(100%-64px))] gap-5 pt-[18px] max-[1100px]:w-[calc(100%-36px)] max-[1100px]:grid-cols-[auto_auto] max-[1100px]:gap-y-4">
+      <header className="fixed inset-x-0 top-0 z-50">
+        <div className="mx-auto flex w-[min(1380px,calc(100%-64px))] items-start justify-between gap-4 pt-[18px] max-[1100px]:w-[calc(100%-36px)]">
         {/* Logo */}
-        <div className="flex items-center gap-[10px] justify-self-start text-[#5C7A62] max-[1100px]:order-1">
+        <a href="#home" className="flex items-center gap-[10px] justify-self-start text-[#5C7A62] no-underline">
           <div className="flex flex-col gap-[2px] text-[26px] font-medium leading-[0.84] tracking-[0.04em] max-[768px]:text-[22px]">
             <span>COSME</span>
           </div>
@@ -117,39 +127,62 @@ function App() {
             <span className="absolute inset-[3px] rounded-[28px] border-2 border-[#5C7A62]/40" />
             <span className="absolute right-4 top-2 h-[27px] w-[20px] rotate-12 rounded-[20px] border-2 border-[#5C7A62]/40" />
           </div>
-        </div>
+        </a>
 
         {/* Navigation */}
         <nav
           aria-label="Primary"
-          className="flex items-center gap-[clamp(22px,2.3vw,48px)] max-[1100px]:static max-[1100px]:order-3 max-[1100px]:col-span-2 max-[1100px]:translate-x-0 max-[1100px]:justify-center max-[1100px]:gap-x-[22px] max-[1100px]:gap-y-4 max-[1100px]:flex-wrap"
+          className="hidden items-center gap-[clamp(22px,2.3vw,48px)] rounded-full border border-[#5C7A62]/10 bg-white/50 px-6 py-3 backdrop-blur-[10px] lg:flex"
         >
-          <a className="text-[13px] font-light text-[#2D2D2D]/70 no-underline transition-colors duration-200 hover:text-[#5C7A62] max-[768px]:text-[12px]" href="#">HOME</a>
-          <a className="text-[13px] font-light text-[#2D2D2D]/70 no-underline transition-colors duration-200 hover:text-[#5C7A62] max-[768px]:text-[12px]" href="#">ABOUT</a>
-          <a className="text-[13px] font-light text-[#2D2D2D]/70 no-underline transition-colors duration-200 hover:text-[#5C7A62] max-[768px]:text-[12px]" href="#">PRODUCTS</a>
-          <a className="text-[13px] font-light text-[#2D2D2D]/70 no-underline transition-colors duration-200 hover:text-[#5C7A62] max-[768px]:text-[12px]" href="#">INGREDIENTS</a>
-          <a className="text-[13px] font-light text-[#2D2D2D]/70 no-underline transition-colors duration-200 hover:text-[#5C7A62] max-[768px]:text-[12px]" href="#">CONTACT</a>
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              className="text-[13px] font-light text-[#2D2D2D]/72 no-underline transition-colors duration-200 hover:text-[#5C7A62]"
+              href={link.href}
+            >
+              {link.label}
+            </a>
+          ))}
         </nav>
 
-        {/* Language switch */}
-        <div
-          role="group"
-          aria-label="Language switch"
-          className="inline-flex justify-self-end items-center gap-1.5 rounded-full border border-[#5C7A62]/12 bg-white/60 p-1.5 backdrop-blur-[10px] max-[1100px]:order-2"
-        >
+        <div className="relative flex items-center gap-2">
           <button
             type="button"
-            className="h-[34px] w-[34px] rounded-full border border-[#5C7A62]/12 bg-[#5C7A62]/8 text-[12px] font-bold text-[#5C7A62]"
-          >EN</button>
-          <button
-            type="button"
-            className="h-[34px] w-[34px] rounded-full bg-transparent text-[12px] font-bold text-[#2D2D2D]/60"
-          >AR</button>
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-navigation"
+            onClick={() => setMobileMenuOpen((open) => !open)}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#5C7A62]/12 bg-white/70 text-[#5C7A62] backdrop-blur-[10px] transition-colors duration-200 hover:bg-white/90 lg:hidden"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" strokeWidth={2} /> : <Menu className="h-5 w-5" strokeWidth={2} />}
+          </button>
+        </div>
+        </div>
+
+        <div className="mx-auto w-[min(1380px,calc(100%-64px))] max-[1100px]:w-[calc(100%-36px)]">
+          <div
+            id="mobile-navigation"
+            className={`mt-3 overflow-hidden rounded-[24px] border border-[#5C7A62]/10 bg-white/82 backdrop-blur-[18px] transition-all duration-300 lg:hidden ${mobileMenuOpen ? 'max-h-[26rem] opacity-100' : 'max-h-0 opacity-0'}`}
+          >
+            <div className="grid gap-2 p-3">
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-between rounded-[18px] border border-transparent px-4 py-3 text-[0.95rem] font-medium text-[#2D2D2D]/82 no-underline transition-colors duration-200 hover:border-[#5C7A62]/10 hover:bg-[#FDF8F0] hover:text-[#5C7A62]"
+                >
+                  <span>{link.label}</span>
+                  <MoonStar className="h-4 w-4 opacity-40" strokeWidth={2} />
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </header>
 
       {/* ===== HERO SECTION ===== */}
-      <section aria-label="Hero" className="relative min-h-screen overflow-hidden bg-[#FDF8F0]">
+      <section id="home" aria-label="Hero" className="relative min-h-screen scroll-mt-24 overflow-hidden bg-[#FDF8F0]">
         {/* Subtle decorative blob — top right, very soft */}
         <div
           className="absolute -top-32 -right-32 h-[500px] w-[500px] rounded-full opacity-30"
@@ -226,7 +259,7 @@ function App() {
           </div>
 
       {/* ===== ABOUT SECTION ===== */}
-      <section ref={aboutSectionRef} aria-label="About" className="relative h-screen bg-[#FDF8F0]">
+      <section id="about" ref={aboutSectionRef} aria-label="About" className="relative h-screen scroll-mt-24 bg-[#FDF8F0]">
         <div className="pt-[80px]">
           <div className="h-[18vh]" />
 
@@ -242,7 +275,7 @@ function App() {
       </section>
 
       {/* ===== ECOSYSTEM SECTION ===== */}
-      <section ref={ecosystemSectionRef} aria-label="Our Values" className="relative h-screen bg-[#F5EDE0]">
+      <section id="values" ref={ecosystemSectionRef} aria-label="Our Values" className="relative h-screen scroll-mt-24 bg-[#F5EDE0]">
         <div className="relative mx-auto flex h-full w-[min(1380px,calc(100%-64px))] items-center justify-center max-[1100px]:w-[calc(100%-36px)]">
           {/* Cards grid */}
           <div className="relative z-20 grid h-full w-full grid-cols-2 grid-rows-2 gap-6 py-16 max-[768px]:grid-cols-1 max-[768px]:grid-rows-4 max-[768px]:gap-4">
@@ -291,22 +324,8 @@ function App() {
 
       {/* ===== HORIZONTAL SCROLL SECTION ===== */}
       <HorizontalScrollSection />
-      {/* <ApproachSection /> */}
       <DetailsSection />
       <SiteFooter />
-
-      {/* WhatsApp button */}
-      <button
-        type="button"
-        className="fixed right-[clamp(18px,2.5vw,36px)] bottom-[clamp(22px,3.2vw,36px)] z-20 grid h-[72px] w-[72px] place-items-center rounded-full border border-[#5C7A62]/20 bg-white/80 text-[#5C7A62] shadow-[0_8px_28px_rgba(0,0,0,0.08)] backdrop-blur-[10px] transition-transform duration-200 hover:scale-[1.02] max-[768px]:h-[62px] max-[768px]:w-[62px]"
-        aria-label="Open WhatsApp"
-      >
-        <MessageCircle
-          aria-hidden="true"
-          className="h-8 w-8 max-[768px]:h-7 max-[768px]:w-7"
-          strokeWidth={2.2}
-        />
-      </button>
 
     </main>
   );
